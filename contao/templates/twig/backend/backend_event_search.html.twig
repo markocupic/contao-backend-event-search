@@ -1,0 +1,37 @@
+{% trans_default_domain 'contao_default' %}
+
+<div id="tl_backend_event_search"
+     class="backend-event-search"
+     data-backend-event-search
+     data-search-url="{{ search_url }}"
+     data-min-length="{{ min_query_length }}"
+     data-list-icon="{{ list_icon }}"
+     data-participants-icon="{{ participants_icon }}"
+     data-label-participants="{{ 'MSC.backendEventSearch.participants'|trans }}"
+     data-label-results="{{ 'MSC.backendEventSearch.results'|trans }}"
+     data-label-more-results="{{ 'MSC.backendEventSearch.moreResults'|trans }}"
+     data-label-no-results="{{ 'MSC.backendEventSearch.noResults'|trans }}"
+     data-label-error="{{ 'MSC.backendEventSearch.error'|trans }}"
+     data-label-edit="{{ 'MSC.backendEventSearch.edit'|trans }}"
+     data-label-open-list="{{ 'MSC.backendEventSearch.openList'|trans }}"
+     data-label-release-level="{{ 'MSC.backendEventSearch.releaseLevel'|trans }}"
+>
+    <h2 class="backend-event-search__headline">{{ 'MSC.backendEventSearch.headline'|trans }}</h2>
+    <p>{{ 'MSC.backendEventSearch.description'|trans }}</p>
+
+    <div class="backend-event-search__field">
+        <label for="backend_event_search_query" class="invisible">{{ 'MSC.backendEventSearch.headline'|trans }}</label>
+        <input type="search"
+               id="backend_event_search_query"
+               class="tl_text"
+               placeholder="{{ 'MSC.backendEventSearch.placeholder'|trans }}"
+               autocomplete="off"
+               spellcheck="false"
+               aria-controls="backend_event_search_results"
+               data-backend-event-search-input
+        >
+    </div>
+
+    <p class="backend-event-search__status" aria-live="polite" data-backend-event-search-status></p>
+    <ul id="backend_event_search_results" class="backend-event-search__results" data-backend-event-search-results></ul>
+</div>

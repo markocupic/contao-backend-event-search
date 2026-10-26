@@ -1,0 +1,11 @@
+# Jetbrains
+/.idea/*
+
+# tools
+/vendor/
+/tools/*/vendor
+/tools/*/composer.lock
+/composer.lock
+/.php-cs-fixer.cache
+/tools/phpunit/.phpunit.result.cache
+/tools/phpunit/.phpunit.cache/

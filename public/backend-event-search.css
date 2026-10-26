@@ -1,0 +1,144 @@
+/*
+ * This file is part of Contao Backend Event Search.
+ *
+ * (c) Marko Cupic <m.cupic@gmx.ch>
+ * @license GPL-3.0-or-later
+ * For the full copyright and license information,
+ * please view the LICENSE file that was distributed with this source code.
+ * @link https://github.com/markocupic/contao-backend-event-search
+ */
+
+#tl_backend_event_search {
+    margin-bottom: 18px;
+}
+
+.backend-event-search__headline {
+    margin: 14px 0 10px;
+}
+
+.backend-event-search__field {
+    position: relative;
+    max-width: 640px;
+    margin-top: 9px;
+}
+
+.backend-event-search__field input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: .875rem;
+    padding: 8px 10px;
+}
+
+.backend-event-search__field input::placeholder {
+    font-size: .875rem;
+}
+
+.backend-event-search.is-loading .backend-event-search__field::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    border: 2px solid var(--border, #ccc);
+    border-top-color: var(--contao, #f47c00);
+    border-radius: 50%;
+    animation: backend-event-search-spin .7s linear infinite;
+}
+
+@keyframes backend-event-search-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.backend-event-search__status:empty {
+    display: none;
+}
+
+.backend-event-search__status {
+    margin: 9px 0 0;
+    color: var(--gray, #999);
+}
+
+.backend-event-search__results {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.backend-event-search__results:empty {
+    display: none;
+}
+
+.backend-event-search__hit {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    border-bottom: 1px solid var(--border, #e6e6e6);
+}
+
+.backend-event-search__hit:last-child {
+    border-bottom: none;
+}
+
+.backend-event-search__link {
+    flex: 1;
+    min-width: 0;
+    display: block;
+    padding: 7px 6px;
+    text-decoration: none;
+    border-radius: 2px;
+}
+
+.backend-event-search__link:hover,
+.backend-event-search__link:focus {
+    background: var(--hover-row, #f5f5f5);
+    outline: none;
+}
+
+.backend-event-search__title {
+    display: block;
+    font-weight: 600;
+    color: var(--text, #222);
+    margin-bottom: .25rem;
+}
+
+.backend-event-search__meta,
+.backend-event-search__snippet {
+    display: block;
+    margin-top: 2px;
+    font-size: .75rem;
+    color: var(--gray, #999);
+}
+
+.backend-event-search__release-level {
+    font-weight: 600;
+    color: var(--text, #222);
+}
+
+.backend-event-search__meta > span + span::before {
+    content: "·";
+    margin: 0 6px;
+}
+
+.backend-event-search__operations {
+    flex: none;
+    margin-left: auto;
+    display: flex;
+    gap: 4px;
+    padding: 8px 6px 0;
+}
+
+.backend-event-search__operation {
+    display: inline-flex;
+    padding: 0 2px;
+}
+
+.backend-event-search mark {
+    padding: 0 1px;
+    background: rgba(244, 124, 0, .25);
+    color: inherit;
+    border-radius: 2px;
+}

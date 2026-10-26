@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        bind:
+            $searchableFields: '%markocupic_contao_backend_event_search.searchable_fields%'
+            $languages: '%markocupic_contao_backend_event_search.languages%'
+            $hitsPerPage: '%markocupic_contao_backend_event_search.hits_per_page%'
+            $backendModule: '%markocupic_contao_backend_event_search.backend_module%'
+            $indexDir: '%markocupic_contao_backend_event_search.index_dir%'
+
+    Markocupic\ContaoBackendEventSearch\:
+        resource: ../src/
+        exclude:
+            - ../src/ContaoManager/
+            - ../src/MarkocupicContaoBackendEventSearch.php
+
+    Markocupic\ContaoBackendEventSearch\Controller\BackendEventSearchController:
+        public: true
+        tags: ['controller.service_arguments']

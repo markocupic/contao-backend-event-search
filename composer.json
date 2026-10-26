@@ -1,0 +1,79 @@
+{
+    "name": "markocupic/contao-backend-event-search",
+    "description": "Fast full text search for events across all calendars, placed directly on the Contao back end start page. Powered by Loupe (SQLite).",
+    "keywords": [
+        "contao",
+        "backend",
+        "calendar",
+        "events",
+        "search",
+        "loupe"
+    ],
+    "type": "contao-bundle",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Marko Cupic",
+            "email": "m.cupic@gmx.ch",
+            "homepage": "https://github.com/markocupic",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/markocupic/contao-backend-event-search/issues",
+        "source": "https://github.com/markocupic/contao-backend-event-search"
+    },
+    "require": {
+        "php": "^8.2",
+        "ext-pdo_sqlite": "*",
+        "contao/calendar-bundle": "^5.3 || ^6.0",
+        "contao/core-bundle": "^5.3 || ^6.0",
+        "doctrine/dbal": "^3.6 || ^4.0",
+        "loupe/loupe": "^1.1",
+        "psr/log": "^2.0 || ^3.0",
+        "symfony/config": "^6.4 || ^7.0 || ^8.0",
+        "symfony/console": "^6.4 || ^7.0 || ^8.0",
+        "symfony/dependency-injection": "^6.4 || ^7.0 || ^8.0",
+        "symfony/filesystem": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-foundation": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-kernel": "^6.4 || ^7.0 || ^8.0",
+        "symfony/routing": "^6.4 || ^7.0 || ^8.0",
+        "symfony/security-bundle": "^6.4 || ^7.0 || ^8.0",
+        "symfony/translation-contracts": "^3.0",
+        "twig/twig": "^3.8"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.13",
+        "markocupic/easy-coding-standard": "^13.0"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Markocupic\\ContaoBackendEventSearch\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Markocupic\\ContaoBackendEventSearch\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": false,
+            "contao/manager-plugin": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Markocupic\\ContaoBackendEventSearch\\ContaoManager\\Plugin"
+    },
+    "scripts": {
+        "cs-fixer": "@php vendor/bin/ecs check --config tools/ecs/config/default.php --fix --ansi",
+        "cs-check": "@php vendor/bin/ecs check --config tools/ecs/config/default.php --ansi",
+        "unit-tests": "@php tools/phpunit/vendor/bin/phpunit -c tools/phpunit/phpunit.xml.dist"
+    },
+    "version": "1.0"
+}
