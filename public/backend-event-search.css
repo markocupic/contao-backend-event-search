@@ -98,6 +98,12 @@
     outline: none;
 }
 
+/* No permission to edit the event: the hit is not linked */
+.backend-event-search__link--disabled:hover {
+    background: none;
+    cursor: default;
+}
+
 .backend-event-search__title {
     display: block;
     font-weight: 600;

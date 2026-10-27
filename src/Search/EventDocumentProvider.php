@@ -257,6 +257,18 @@ class EventDocumentProvider
     }
 
     /**
+     * True if the participant list of the Event-Tool (tl_calendar_events_member) is available.
+     */
+    public function hasParticipantList(): bool
+    {
+        if (null === $this->hasParticipantTable) {
+            $this->hasParticipantTable = $this->connection->createSchemaManager()->tablesExist([self::PARTICIPANT_TABLE]);
+        }
+
+        return $this->hasParticipantTable;
+    }
+
+    /**
      * @param list<int> $eventIds
      *
      * @return array<int, list<string>> event id => instructor names (main instructor first)
@@ -300,18 +312,6 @@ class EventDocumentProvider
         }
 
         return $this->eventColumns;
-    }
-
-    /**
-     * True if the participant list of the Event-Tool (tl_calendar_events_member) is available.
-     */
-    public function hasParticipantList(): bool
-    {
-        if (null === $this->hasParticipantTable) {
-            $this->hasParticipantTable = $this->connection->createSchemaManager()->tablesExist([self::PARTICIPANT_TABLE]);
-        }
-
-        return $this->hasParticipantTable;
     }
 
     /**

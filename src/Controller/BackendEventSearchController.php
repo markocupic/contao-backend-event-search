@@ -19,12 +19,14 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\System;
+use Markocupic\ContaoBackendEventSearch\Event\BuildSearchHitOperationsEvent;
 use Markocupic\ContaoBackendEventSearch\Search\EventDocumentProvider;
 use Markocupic\ContaoBackendEventSearch\Search\EventSearchIndex;
 use Markocupic\ContaoBackendEventSearch\Search\Highlighter;
 use Markocupic\ContaoBackendEventSearch\Security\EventSearchAccess;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,6 +57,7 @@ class BackendEventSearchController
         private readonly EventSearchIndex $searchIndex,
         private readonly EventDocumentProvider $documentProvider,
         private readonly UrlGeneratorInterface $router,
+        private readonly EventDispatcherInterface $eventDispatcher,
         #[Autowire(service: 'contao.csrf.token_manager')]
         private readonly ContaoCsrfTokenManager $csrfTokenManager,
         #[Autowire(service: 'monolog.logger.contao.error')]
@@ -109,6 +112,10 @@ class BackendEventSearchController
         foreach ($result['hits'] as $hit) {
             $formatted = $hit['_formatted'] ?? $hit;
 
+            // Other bundles may replace the default operations, e.g. the SAC Event-Tool
+            $operationsEvent = new BuildSearchHitOperationsEvent((int) $hit['id'], $this->withoutFormatting($hit), $this->backendModule);
+            $this->eventDispatcher->dispatch($operationsEvent);
+
             $hits[] = [
                 'id' => (int) $hit['id'],
                 'matchedById' => true === ($hit['_matchedById'] ?? false),
@@ -125,19 +132,21 @@ class BackendEventSearchController
                     'id' => (int) $hit['pid'],
                     'rt' => $requestToken,
                 ]),
-                'editUrl' => $this->router->generate('contao_backend', [
+                'editUrl' => $operationsEvent->hasEditUrl() ? $operationsEvent->getEditUrl() : $this->router->generate('contao_backend', [
                     'do' => $this->backendModule,
                     'table' => 'tl_calendar_events',
                     'id' => (int) $hit['id'],
                     'act' => 'edit',
                     'rt' => $requestToken,
                 ]),
+                'editTitle' => $operationsEvent->hasEditUrl() ? $operationsEvent->getEditTitle() : null,
                 'participantsUrl' => $hasParticipantList ? $this->router->generate('contao_backend', [
                     'do' => $this->backendModule,
                     'table' => 'tl_calendar_events_member',
                     'id' => (int) $hit['id'],
                     'rt' => $requestToken,
                 ]) : null,
+                'operationsHtml' => $operationsEvent->getOperationsHtml(),
             ];
         }
 
@@ -146,6 +155,18 @@ class BackendEventSearchController
             'totalHits' => $result['totalHits'],
             'hits' => $hits,
         ]);
+    }
+
+    /**
+     * Removes the highlighting and the internal attributes of Loupe (e.g. "_formatted").
+     *
+     * @param array<string, mixed> $hit
+     *
+     * @return array<string, mixed>
+     */
+    private function withoutFormatting(array $hit): array
+    {
+        return array_filter($hit, static fn (string $key): bool => !str_starts_with($key, '_'), ARRAY_FILTER_USE_KEY);
     }
 
     /**

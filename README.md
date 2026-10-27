@@ -121,5 +121,38 @@ Das Verzeichnis `var/backend_event_search` gehört nicht ins Deployment (es wird
 | `EventListener\DataContainer\UpdateSearchIndexListener`  | DCA-Callbacks für `tl_calendar_events`, `tl_calendar` und `tl_user`.                                 |
 | `Controller\BackendEventSearchController`                | `GET /contao/backend-event-search?q=…`, liefert die Treffer als JSON (nur mit Berechtigung).         |
 | `Security\EventSearchAccess`                             | Prüft die Berechtigung, liefert die erlaubten Kalender und filtert die Treffer auf Event-Ebene.      |
+| `Event\BuildSearchHitOperationsEvent`                    | Erweiterungspunkt: andere Bundles ersetzen die Operationen eines Treffers durch eigenes Markup.      |
 | `Cron\ReindexEventsCron`, `Command\ReindexEventsCommand` | Kompletter Neuaufbau des Index.                                                                      |
 | `public/backend-event-search.js`                         | Suche beim Tippen (Debounce), Tastaturnavigation (↑/↓, Esc), letzte Suche bleibt erhalten.           |
+
+## Operationen anderer Bundles
+
+Ohne weitere Bundles stehen neben jedem Treffer zwei Operationen: die Eventauflistung des Kalenders und, falls es
+`tl_calendar_events_member` gibt, die Teilnehmerliste.
+
+Andere Bundles können diese Operationen pro Treffer ersetzen. Dazu hören sie auf das Event
+`Markocupic\ContaoBackendEventSearch\Event\BuildSearchHitOperationsEvent` und setzen eigenes Markup. Das Markup wird
+unverändert eingefügt, das Bundle muss also selbst escapen (z. B. mit einem Twig-Template). Stimulus-Controller im
+Markup werden automatisch verbunden.
+
+```php
+use Markocupic\ContaoBackendEventSearch\Event\BuildSearchHitOperationsEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+
+#[AsEventListener]
+class SearchHitOperationsListener
+{
+    public function __invoke(BuildSearchHitOperationsEvent $event): void
+    {
+        // $event->getEventId(), $event->getDocument(), $event->getBackendModule()
+        $event->setOperationsHtml($this->twig->render('…', [/* … */]));
+
+        // Optional: link of the event title (null = no link, e.g. without permission)
+        $event->setEditUrl($editUrl, $editTitle);
+    }
+}
+```
+
+Das SAC Event-Tool ([markocupic/sac-event-tool-bundle](https://github.com/markocupic/sac-event-tool-bundle)) nutzt das,
+um dieselben Operationen, Icons und Berechtigungen wie im Dashboard «Ihre nächsten Events» anzuzeigen, inklusive des
+aufklappbaren Menüs auf kleinen Bildschirmen.

@@ -54,6 +54,16 @@
 		};
 
 		const createOperations = (hit) => {
+			// Operations provided by another bundle (BuildSearchHitOperationsEvent), e.g. the SAC Event-Tool.
+			// The markup is rendered and escaped on the server. Stimulus controllers in it connect automatically.
+			if (hit.operationsHtml) {
+				const external = document.createElement('div');
+				external.className = 'backend-event-search__operations backend-event-search__operations--external';
+				external.innerHTML = hit.operationsHtml;
+
+				return external;
+			}
+
 			const operations = document.createElement('span');
 			operations.className = 'backend-event-search__operations';
 
@@ -86,10 +96,16 @@
 
 				// Main link: edit the event.
 				// The *Html values are escaped on the server, only <mark> tags are added.
-				const link = document.createElement('a');
-				link.href = hit.editUrl;
-				link.title = root.dataset.labelEdit;
+				// Without editUrl (e.g. no permission, see BuildSearchHitOperationsEvent) the hit is not linked.
+				const link = document.createElement(hit.editUrl ? 'a' : 'span');
 				link.className = 'backend-event-search__link';
+				link.title = hit.editTitle || root.dataset.labelEdit;
+
+				if (hit.editUrl) {
+					link.href = hit.editUrl;
+				} else {
+					link.classList.add('backend-event-search__link--disabled');
+				}
 
 				const title = document.createElement('span');
 				title.className = 'backend-event-search__title';
@@ -219,7 +235,12 @@
 
 		// Keyboard navigation: arrow keys move through the results, escape clears the search
 		root.addEventListener('keydown', (e) => {
-			const links = [...list.querySelectorAll('.backend-event-search__link')];
+			// The operation menus of other bundles handle their own keys (e.g. Escape closes the dropdown)
+			if (e.target.closest('.backend-event-search__operations--external')) {
+				return;
+			}
+
+			const links = [...list.querySelectorAll('a.backend-event-search__link')];
 			const index = links.indexOf(document.activeElement);
 
 			if ('ArrowDown' === e.key) {

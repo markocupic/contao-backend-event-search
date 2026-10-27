@@ -98,30 +98,6 @@ class EventSearchIndex
     }
 
     /**
-     * Returns the event with the given id, if the query is a positive integer.
-     *
-     * @return array<string, mixed>|null
-     */
-    private function findById(string $query): array|null
-    {
-        $query = trim($query);
-
-        if (!preg_match('/^[1-9]\d{0,9}$/', $query) || (int) $query > 4294967295) {
-            return null;
-        }
-
-        $document = $this->getLoupe()->getDocument((int) $query);
-
-        if (null === $document) {
-            return null;
-        }
-
-        $document['_matchedById'] = true;
-
-        return $document;
-    }
-
-    /**
      * Rebuilds the whole index. The new index is built in a temporary
      * directory, so searches keep working while the index is rebuilt.
      *
@@ -217,6 +193,30 @@ class EventSearchIndex
             ->withLanguages($this->languages)
             ->withMinTokenLengthForPrefixSearch(2)
         ;
+    }
+
+    /**
+     * Returns the event with the given id, if the query is a positive integer.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function findById(string $query): array|null
+    {
+        $query = trim($query);
+
+        if (!preg_match('/^[1-9]\d{0,9}$/', $query) || (int) $query > 4294967295) {
+            return null;
+        }
+
+        $document = $this->getLoupe()->getDocument((int) $query);
+
+        if (null === $document) {
+            return null;
+        }
+
+        $document['_matchedById'] = true;
+
+        return $document;
     }
 
     private function ensureIndexIsUpToDate(): void

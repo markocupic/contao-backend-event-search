@@ -24,9 +24,8 @@ use Markocupic\ContaoBackendEventSearch\Search\EventSearchIndex;
 #[AsCronJob('hourly')]
 class ReindexEventsCron
 {
-    public function __construct(
-        private readonly EventSearchIndex $searchIndex,
-    ) {
+    public function __construct(private readonly EventSearchIndex $searchIndex)
+    {
     }
 
     public function __invoke(): void

@@ -70,17 +70,20 @@ class EventSearchIndexTest extends TestCase
 
         $documents = $provider->getDocuments([10]);
 
-        $this->assertSame([
-            'id' => 10,
-            'pid' => 1,
-            'title' => 'Piz Palü Ostgipfel',
-            'startDate' => 1800000000,
-            'calendarTitle' => 'Touren 2027',
-            'instructors' => 'Hans Muster, Erika Bergmann',
-            'releaseLevel' => null,
-            'releaseLevelTitle' => null,
-            'teaser' => 'Hochtour mit Gletscher',
-        ], $documents[0]);
+        $this->assertSame(
+            [
+                'id' => 10,
+                'pid' => 1,
+                'title' => 'Piz Palü Ostgipfel',
+                'startDate' => 1800000000,
+                'calendarTitle' => 'Touren 2027',
+                'instructors' => 'Hans Muster, Erika Bergmann',
+                'releaseLevel' => null,
+                'releaseLevelTitle' => null,
+                'teaser' => 'Hochtour mit Gletscher',
+            ],
+            $documents[0],
+        );
     }
 
     public function testAddsTheReleaseLevel(): void
